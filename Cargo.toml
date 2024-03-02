@@ -1,37 +1,42 @@
 [package]
-name = "template-rs"
-version = "0.1.6"
+name = "smallvec-wrapper"
+version = "0.1.0"
 edition = "2021"
-repository = "https://github.com/al8n/template-rs"
-homepage = "https://github.com/al8n/template-rs"
-documentation = "https://docs.rs/template-rs"
-description = "A template for creating Rust open-source repo on GitHub"
+repository = "https://github.com/al8n/smallvec-wrapper"
+homepage = "https://github.com/al8n/smallvec-wrapper"
+documentation = "https://docs.rs/smallvec-wrapper"
+description = "Macro and common structs to play with `smallvec`"
 license = "MIT/Apache-2.0"
-rust-version = "1.73"
+rust-version = "1.56"
 
-[[bench]]
-path = "benches/foo.rs"
-name = "foo"
-harness = false
 
 [features]
-default = []
+default = ["std"]
+std = ["either?/use_std", "rkyv?/std", "serde?/std"]
+either = ["dep:either"]
+
+const_generics = ["smallvec/const_generics"]
+const_new = ["smallvec/const_new"]
+debugger_visualizer = ["smallvec/debugger_visualizer"]
+drain_filter = ["smallvec/drain_filter"]
+drain_keep_rest = ["smallvec/drain_keep_rest"]
+may_dangle = ["smallvec/may_dangle"]
+specialization = ["smallvec/specialization"]
+union = ["smallvec/union"]
+write = ["smallvec/write"]
+
+
+serde = ["dep:serde", "smallvec/serde", "either/serde"]
+rkyv16 = ["rkyv/size_16"]
+rkyv32 = ["rkyv/size_32"]
+rkyv64 = ["rkyv/size_64"]
 
 [dependencies]
+smallvec = { version = "1", default-features = false }
+either = { version = "1", default-features = false, optional = true }
 
-[dev-dependencies]
-criterion = "0.5"
-tempfile = "3"
-
-[profile.bench]
-opt-level = 3
-debug = false
-codegen-units = 1
-lto = 'thin'
-incremental = false
-debug-assertions = false
-overflow-checks = false
-rpath = false
+serde = { version = "1", optional = true, default-features = false, features = ["derive"] }
+rkyv = { version = "0.7", optional = true, default-features = false, features = ["validation", "smallvec"] }
 
 [package.metadata.docs.rs]
 all-features = true
