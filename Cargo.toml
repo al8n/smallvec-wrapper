@@ -1,30 +1,29 @@
 [package]
 name = "smallvec-wrapper"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 repository = "https://github.com/al8n/smallvec-wrapper"
 homepage = "https://github.com/al8n/smallvec-wrapper"
 documentation = "https://docs.rs/smallvec-wrapper"
 description = "Macro and common structs to play with `smallvec`"
-license = "MIT/Apache-2.0"
+license = "MIT OR Apache-2.0"
 rust-version = "1.56"
-
+keywords = ["smallvec", "smallvec-macro", "wrapper"]
+categories = ["data-structures"]
 
 [features]
 default = ["std"]
-std = ["either?/use_std", "rkyv?/std", "serde?/std"]
+std = ["either?/use_std", "rkyv?/std", "serde?/std", "const_generics", "const_new", "write"]
 either = ["dep:either"]
 
 const_generics = ["smallvec/const_generics"]
 const_new = ["smallvec/const_new"]
-debugger_visualizer = ["smallvec/debugger_visualizer"]
 drain_filter = ["smallvec/drain_filter"]
 drain_keep_rest = ["smallvec/drain_keep_rest"]
 may_dangle = ["smallvec/may_dangle"]
 specialization = ["smallvec/specialization"]
 union = ["smallvec/union"]
 write = ["smallvec/write"]
-
 
 serde = ["dep:serde", "smallvec/serde", "either/serde"]
 rkyv16 = ["rkyv/size_16"]

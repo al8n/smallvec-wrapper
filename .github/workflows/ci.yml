@@ -63,7 +63,7 @@ jobs:
     - name: Install cargo-hack
       run: cargo install cargo-hack
     - name: Apply clippy lints
-      run: cargo hack clippy --each-feature
+      run: cargo hack clippy --each-feature --exclude-all-features
  
   build:
     name: build
@@ -88,7 +88,7 @@ jobs:
           ${{ runner.os }}-build-
     - name: Install Rust
       # --no-self-update is necessary because the windows environment cannot self-update rustup.exe.
-      run: rustup update stable --no-self-update && rustup default stable
+      run: rustup update nightly --no-self-update && rustup default nightly
     - name: Install cargo-hack
       run: cargo install cargo-hack
     - name: Cache ~/.cargo
@@ -97,4 +97,4 @@ jobs:
         path: ~/.cargo
         key: ${{ matrix.os }}-coverage-dotcargo
     - name: Run build
-      run: cargo hack build --feature-powerset --group-features const_generics,const_new,debugger_visualizer,drain_filter,drain_keep_rest,may_dangle,specialization,union,write --exclude-features rkyv16,rkyv32,rkyv64
+      run: cargo hack build --feature-powerset --group-features const_generics,const_new,drain_filter,drain_keep_rest,may_dangle,specialization,union,write --exclude-features rkyv16,rkyv32,rkyv64

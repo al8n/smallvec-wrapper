@@ -71,6 +71,9 @@ macro_rules! smallvec_wrapper {
       }
 
       /// Constructs a new instance on the stack from an array without copying elements. Also sets the length. The user is responsible for ensuring that `len <= N`.
+      ///
+      /// # Safety
+      /// - The user is responsible for ensuring that `len <= N`.
       #[cfg(feature = "const_new")]
       #[cfg_attr(docsrs, doc(cfg(feature = "const_new")))]
       #[inline]
