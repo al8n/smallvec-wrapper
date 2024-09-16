@@ -23,6 +23,246 @@ Macro and common structs to play with [`smallvec`](https://crates.io/crates/smal
 smallvec-wrapper = "0.1"
 ```
 
+## Example
+
+```rust
+use smallvec_wrapper::smallvec_warpper;
+
+smallvec_wrapper!(
+  /// A vec holds the first 5 elements on the stack.
+  #[derive(PartialEq, Eq, Hash, Clone, Debug, PartialOrd, Ord)]
+  #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+  #[cfg_attr(feature = "serde", serde(transparent))]
+  pub MyVec<T>([T; 5]);
+);
+```
+
+The macro will help you generate a new type and methods.
+
+<details>
+
+  <summary>
+    Show generated code
+  </summary>
+
+  ```rust
+  /// A vec holds the first 5 elements on the stack.
+  #[derive(PartialEq, Eq, Hash, Clone, Debug, PartialOrd, Ord)]
+  #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+  #[cfg_attr(feature = "serde", serde(transparent))]
+  pub struct MyVec<T>(::smallvec_wrapper::__private::smallvec::SmallVec<[T; { 5 }]>);
+
+  impl<T> ::core::default::Default for MyVec<T> {
+      fn default() -> Self {
+          Self::new()
+      }
+  }
+
+  impl<T> MyVec<T> {
+      /// Creates a new instance.
+      #[cfg(feature = "const_new")]
+      #[inline]
+      pub const fn new() -> Self {
+          Self(::smallvec_wrapper::__private::smallvec::SmallVec::new_const())
+      }
+      /// Constructs a new instance on the stack from an array without copying elements.
+      #[cfg(feature = "const_new")]
+      #[inline]
+      pub const fn from_buf(value: [T; { 5 }]) -> Self {
+          Self(::smallvec_wrapper::__private::smallvec::SmallVec::from_const(value))
+      }
+      /// Constructs a new instance on the stack from an array without copying elements. Also sets the length, which must be less or equal to the size of buf.
+      #[inline]
+      pub fn from_buf_and_len(value: [T; { 5 }], len: usize) -> Self {
+          Self(
+              ::smallvec_wrapper::__private::smallvec::SmallVec::from_buf_and_len(
+                  value,
+                  len,
+              ),
+          )
+      }
+      /// Constructs a new instance on the stack from an array without copying elements. Also sets the length. The user is responsible for ensuring that `len <= N`.
+      ///
+      /// # Safety
+      /// - The user is responsible for ensuring that `len <= N`.
+      #[cfg(feature = "const_new")]
+      #[inline]
+      pub const unsafe fn from_const_with_len_unchecked(
+          value: [T; { 5 }],
+          len: usize,
+      ) -> Self {
+          Self(
+              ::smallvec_wrapper::__private::smallvec::SmallVec::from_const_with_len_unchecked(
+                  value,
+                  len,
+              ),
+          )
+      }
+      /// Creates a new instance of `ApplyBatchResponse` with the given capacity.
+      pub fn with_capacity(capacity: usize) -> Self {
+          Self(::smallvec_wrapper::__private::smallvec::SmallVec::with_capacity(capacity))
+      }
+  }
+  impl<T> ::core::convert::From<T> for MyVec<T> {
+      fn from(value: T) -> Self {
+          Self({
+              let count = 0usize + 1usize;
+              #[allow(unused_mut)]
+              let mut vec = ::smallvec::SmallVec::new();
+              if count <= vec.inline_size() {
+                  vec.push(value);
+                  vec
+              } else {
+                  ::smallvec::SmallVec::from_vec(
+                      <[_]>::into_vec(#[rustc_box] ::alloc::boxed::Box::new([value])),
+                  )
+              }
+          })
+      }
+  }
+  impl<T> ::core::convert::From<::std::vec::Vec<T>> for MyVec<T> {
+      fn from(values: ::std::vec::Vec<T>) -> Self {
+          Self(::core::convert::Into::into(values))
+      }
+  }
+  impl<T> ::core::convert::From<&[T]> for MyVec<T>
+  where
+      T: ::core::clone::Clone,
+  {
+      fn from(values: &[T]) -> Self {
+          Self(::core::convert::Into::into(values))
+      }
+  }
+  impl<T> ::core::convert::From<::core::option::Option<T>> for MyVec<T> {
+      fn from(value: ::core::option::Option<T>) -> Self {
+          match value {
+              ::core::option::Option::Some(value) => {
+                  Self({
+                      let count = 0usize + 1usize;
+                      #[allow(unused_mut)]
+                      let mut vec = ::smallvec::SmallVec::new();
+                      if count <= vec.inline_size() {
+                          vec.push(value);
+                          vec
+                      } else {
+                          ::smallvec::SmallVec::from_vec(
+                              <[_]>::into_vec(
+                                  #[rustc_box]
+                                  ::alloc::boxed::Box::new([value]),
+                              ),
+                          )
+                      }
+                  })
+              }
+              ::core::option::Option::None => {
+                  Self(::smallvec_wrapper::__private::smallvec::SmallVec::new())
+              }
+          }
+      }
+  }
+  impl<T> ::core::convert::From<[T; { 5 }]> for MyVec<T> {
+      fn from(value: [T; { 5 }]) -> Self {
+          Self(value.into())
+      }
+  }
+  impl<
+      T,
+  > ::core::convert::From<::smallvec_wrapper::__private::smallvec::SmallVec<[T; { 5 }]>>
+  for MyVec<T> {
+      fn from(
+          value: ::smallvec_wrapper::__private::smallvec::SmallVec<[T; { 5 }]>,
+      ) -> Self {
+          Self(value)
+      }
+  }
+  impl<T> ::core::ops::Deref for MyVec<T> {
+      type Target = ::smallvec_wrapper::__private::smallvec::SmallVec<[T; { 5 }]>;
+      fn deref(&self) -> &Self::Target {
+          &self.0
+      }
+  }
+  impl<T> ::core::ops::DerefMut for MyVec<T> {
+      fn deref_mut(&mut self) -> &mut Self::Target {
+          &mut self.0
+      }
+  }
+  impl<T> ::core::borrow::Borrow<[T]> for MyVec<T> {
+      fn borrow(&self) -> &[T] {
+          &self.0
+      }
+  }
+  impl<T> ::core::borrow::BorrowMut<[T]> for MyVec<T> {
+      fn borrow_mut(&mut self) -> &mut [T] {
+          &mut self.0
+      }
+  }
+  impl<
+      T,
+  > ::core::convert::AsRef<::smallvec_wrapper::__private::smallvec::SmallVec<[T; { 5 }]>>
+  for MyVec<T> {
+      fn as_ref(&self) -> &::smallvec_wrapper::__private::smallvec::SmallVec<[T; { 5 }]> {
+          &self.0
+      }
+  }
+  impl<
+      T,
+  > ::core::convert::AsMut<::smallvec_wrapper::__private::smallvec::SmallVec<[T; { 5 }]>>
+  for MyVec<T> {
+      fn as_mut(
+          &mut self,
+      ) -> &mut ::smallvec_wrapper::__private::smallvec::SmallVec<[T; { 5 }]> {
+          &mut self.0
+      }
+  }
+  impl<T> ::core::convert::AsRef<[T]> for MyVec<T> {
+      fn as_ref(&self) -> &[T] {
+          &self.0
+      }
+  }
+  impl<T> ::core::convert::AsMut<[T]> for MyVec<T> {
+      fn as_mut(&mut self) -> &mut [T] {
+          &mut self.0
+      }
+  }
+  impl<T> ::core::iter::FromIterator<T> for MyVec<T> {
+      fn from_iter<__T: ::core::iter::IntoIterator<Item = T>>(iter: __T) -> Self {
+          Self(iter.into_iter().collect())
+      }
+  }
+  impl<T> ::core::iter::IntoIterator for MyVec<T> {
+      type Item = T;
+      type IntoIter = ::smallvec_wrapper::__private::smallvec::IntoIter<[T; { 5 }]>;
+      fn into_iter(self) -> Self::IntoIter {
+          self.0.into_iter()
+      }
+  }
+  impl<'a, T> ::core::iter::IntoIterator for &'a MyVec<T> {
+      type Item = &'a T;
+      type IntoIter = ::core::slice::Iter<'a, T>;
+      fn into_iter(self) -> Self::IntoIter {
+          (&self.0).into_iter()
+      }
+  }
+  impl<'a, T> ::core::iter::IntoIterator for &'a mut MyVec<T> {
+      type Item = &'a mut T;
+      type IntoIter = ::core::slice::IterMut<'a, T>;
+      fn into_iter(self) -> Self::IntoIter {
+          self.iter_mut()
+      }
+  }
+  impl<T> ::core::iter::Extend<T> for MyVec<T> {
+      #[inline]
+      fn extend<I: ::core::iter::IntoIterator<Item = T>>(&mut self, iter: I) {
+          self.0.extend(iter)
+      }
+  }
+  ```
+
+</details>
+
+
+
+
 
 #### License
 
