@@ -231,11 +231,11 @@ macro_rules! smallvec_wrapper {
     }
 
     impl<'a, $( $($generic),+ )?> ::core::iter::IntoIterator for &'a mut $name $(< $($generic),+ >)? {
-      type Item = &'a mut T;
-      type IntoIter = ::core::slice::IterMut<'a, T>;
+      type Item = &'a mut $inner;
+      type IntoIter = ::core::slice::IterMut<'a, $inner>;
 
       fn into_iter(self) -> Self::IntoIter {
-        self.iter_mut()
+        (&mut self.0).into_iter()
       }
     }
 
