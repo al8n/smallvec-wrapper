@@ -11,6 +11,9 @@ use either::Either;
 #[cfg_attr(docsrs, doc(cfg(feature = "either")))]
 pub use either;
 
+#[cfg(not(feature = "std"))]
+extern crate alloc as std;
+
 #[doc(hidden)]
 pub mod __private {
   #[cfg(feature = "either")]
@@ -117,6 +120,21 @@ macro_rules! smallvec_wrapper {
       }
     }
 
+    impl $(< $($generic),+ >)? ::core::convert::From<::std::vec::Vec<$inner>> for $name $(< $($generic),+ >)? {
+      fn from(values: ::std::vec::Vec<$inner>) -> Self {
+        Self(::core::convert::Into::into(values))
+      }
+    }
+
+    impl $(< $($generic),+ >)? ::core::convert::From<&[$inner]> for $name $(< $($generic),+ >)?
+    where
+      $inner: ::core::clone::Clone,
+    {
+      fn from(values: &[$inner]) -> Self {
+        Self(::core::convert::Into::into(values))
+      }
+    }
+
     impl $(< $($generic),+ >)? ::core::convert::From<::core::option::Option<$inner>> for $name $(< $($generic),+ >)? {
       fn from(value: ::core::option::Option<$inner>) -> Self {
         match value {
@@ -148,6 +166,18 @@ macro_rules! smallvec_wrapper {
 
     impl $(< $($generic),+ >)? ::core::ops::DerefMut for $name $(< $($generic),+ >)? {
       fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.0
+      }
+    }
+
+    impl $(< $($generic),+ >)? ::core::borrow::Borrow<[$inner]> for $name $(< $($generic),+ >)? {
+      fn borrow(&self) -> &[$inner] {
+        &self.0
+      }
+    }
+
+    impl $(< $($generic),+ >)? ::core::borrow::BorrowMut<[$inner]> for $name $(< $($generic),+ >)? {
+      fn borrow_mut(&mut self) -> &mut [$inner] {
         &mut self.0
       }
     }
@@ -190,6 +220,31 @@ macro_rules! smallvec_wrapper {
         self.0.into_iter()
       }
     }
+
+    impl<'a, $( $($generic),+ )?> ::core::iter::IntoIterator for &'a $name $(< $($generic),+ >)? {
+      type Item = &'a $inner;
+      type IntoIter = ::core::slice::Iter<'a, $inner>;
+
+      fn into_iter(self) -> Self::IntoIter {
+        (&self.0).into_iter()
+      }
+    }
+
+    impl<'a, $( $($generic),+ )?> ::core::iter::IntoIterator for &'a mut $name $(< $($generic),+ >)? {
+      type Item = &'a mut T;
+      type IntoIter = ::core::slice::IterMut<'a, T>;
+
+      fn into_iter(self) -> Self::IntoIter {
+        self.iter_mut()
+      }
+    }
+
+    impl $(< $($generic),+ >)? ::core::iter::Extend<$inner> for $name $(< $($generic),+ >)? {
+      #[inline]
+      fn extend<I: ::core::iter::IntoIterator<Item = $inner>>(&mut self, iter: I) {
+        self.0.extend(iter)
+      }
+    }
   };
 }
 
@@ -224,7 +279,7 @@ smallvec_wrapper!(
     feature = "rkyv",
     derive(::rkyv::Serialize, ::rkyv::Deserialize, ::rkyv::Archive)
   )]
-  #[cfg_attr(feature = "rkyv", archive(compare(PartialEq), check_bytes))]
+  #[cfg_attr(feature = "rkyv", rkyv(compare(PartialEq)))]
   pub OneOrMore<T>([T; 1]);
 );
 
@@ -237,7 +292,7 @@ smallvec_wrapper!(
     feature = "rkyv",
     derive(::rkyv::Serialize, ::rkyv::Deserialize, ::rkyv::Archive)
   )]
-  #[cfg_attr(feature = "rkyv", archive(compare(PartialEq), check_bytes))]
+  #[cfg_attr(feature = "rkyv", rkyv(compare(PartialEq)))]
   pub TinyVec<T>([T; 2]);
 );
 
@@ -250,7 +305,7 @@ smallvec_wrapper!(
     feature = "rkyv",
     derive(::rkyv::Serialize, ::rkyv::Deserialize, ::rkyv::Archive)
   )]
-  #[cfg_attr(feature = "rkyv", archive(compare(PartialEq), check_bytes))]
+  #[cfg_attr(feature = "rkyv", rkyv(compare(PartialEq)))]
   pub TriVec<T>([T; 3]);
 );
 
@@ -263,7 +318,7 @@ smallvec_wrapper!(
     feature = "rkyv",
     derive(::rkyv::Serialize, ::rkyv::Deserialize, ::rkyv::Archive)
   )]
-  #[cfg_attr(feature = "rkyv", archive(compare(PartialEq), check_bytes))]
+  #[cfg_attr(feature = "rkyv", rkyv(compare(PartialEq)))]
   pub SmallVec<T>([T; 4]);
 );
 
@@ -276,7 +331,7 @@ smallvec_wrapper!(
     feature = "rkyv",
     derive(::rkyv::Serialize, ::rkyv::Deserialize, ::rkyv::Archive)
   )]
-  #[cfg_attr(feature = "rkyv", archive(compare(PartialEq), check_bytes))]
+  #[cfg_attr(feature = "rkyv", rkyv(compare(PartialEq)))]
   pub MediumVec<T>([T; 8]);
 );
 
@@ -289,7 +344,7 @@ smallvec_wrapper!(
     feature = "rkyv",
     derive(::rkyv::Serialize, ::rkyv::Deserialize, ::rkyv::Archive)
   )]
-  #[cfg_attr(feature = "rkyv", archive(compare(PartialEq), check_bytes))]
+  #[cfg_attr(feature = "rkyv", rkyv(compare(PartialEq)))]
   pub LargeVec<T>([T; 16]);
 );
 
@@ -302,7 +357,7 @@ smallvec_wrapper!(
     feature = "rkyv",
     derive(::rkyv::Serialize, ::rkyv::Deserialize, ::rkyv::Archive)
   )]
-  #[cfg_attr(feature = "rkyv", archive(compare(PartialEq), check_bytes))]
+  #[cfg_attr(feature = "rkyv", rkyv(compare(PartialEq)))]
   pub XLargeVec<T>([T; 32]);
 );
 
@@ -315,7 +370,7 @@ smallvec_wrapper!(
     feature = "rkyv",
     derive(::rkyv::Serialize, ::rkyv::Deserialize, ::rkyv::Archive)
   )]
-  #[cfg_attr(feature = "rkyv", archive(compare(PartialEq), check_bytes))]
+  #[cfg_attr(feature = "rkyv", rkyv(compare(PartialEq)))]
   pub XXLargeVec<T>([T; 64]);
 );
 
@@ -328,6 +383,6 @@ smallvec_wrapper!(
     feature = "rkyv",
     derive(::rkyv::Serialize, ::rkyv::Deserialize, ::rkyv::Archive)
   )]
-  #[cfg_attr(feature = "rkyv", archive(compare(PartialEq), check_bytes))]
+  #[cfg_attr(feature = "rkyv", rkyv(compare(PartialEq)))]
   pub XXXLargeVec<T>([T; 128]);
 );

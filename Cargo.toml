@@ -1,6 +1,6 @@
 [package]
 name = "smallvec-wrapper"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 repository = "https://github.com/al8n/smallvec-wrapper"
 homepage = "https://github.com/al8n/smallvec-wrapper"
@@ -26,16 +26,13 @@ union = ["smallvec/union"]
 write = ["smallvec/write"]
 
 serde = ["dep:serde", "smallvec/serde", "either/serde"]
-rkyv16 = ["rkyv/size_16"]
-rkyv32 = ["rkyv/size_32"]
-rkyv64 = ["rkyv/size_64"]
 
 [dependencies]
 smallvec = { version = "1", default-features = false }
 either = { version = "1", default-features = false, optional = true }
 
 serde = { version = "1", optional = true, default-features = false, features = ["derive"] }
-rkyv = { version = "0.7", optional = true, default-features = false, features = ["validation", "smallvec"] }
+rkyv = { version = "0.8", optional = true, default-features = false, features = ["smallvec-1", "bytecheck"] }
 
 [package.metadata.docs.rs]
 all-features = true
