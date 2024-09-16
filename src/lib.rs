@@ -102,7 +102,7 @@ macro_rules! smallvec_wrapper {
         }
       }
 
-      /// Convert [`Either`](either::Either) into self.
+      /// Convert [`Either`] into self.
       #[cfg(feature = "either")]
       #[cfg_attr(docsrs, doc(cfg(feature = "either")))]
       #[inline]
