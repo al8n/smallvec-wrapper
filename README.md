@@ -20,7 +20,7 @@ Macro and common structs to play with [`smallvec`](https://crates.io/crates/smal
 
 ```toml
 [dependencies]
-smallvec-wrapper = "0.1"
+smallvec-wrapper = "0.2"
 ```
 
 ## Example
