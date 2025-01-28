@@ -1,6 +1,6 @@
 [package]
 name = "smallvec-wrapper"
-version = "0.2.1"
+version = "0.2.2"
 edition = "2021"
 repository = "https://github.com/al8n/smallvec-wrapper"
 homepage = "https://github.com/al8n/smallvec-wrapper"
@@ -13,8 +13,7 @@ categories = ["data-structures"]
 
 [features]
 default = ["std"]
-std = ["either?/use_std", "rkyv?/std", "serde?/std", "const_generics", "const_new", "write"]
-either = ["dep:either"]
+std = ["either/use_std", "rkyv?/std", "serde?/std", "const_generics", "const_new", "write"]
 
 const_generics = ["smallvec/const_generics"]
 const_new = ["smallvec/const_new"]
@@ -29,7 +28,7 @@ serde = ["dep:serde", "smallvec/serde", "either/serde"]
 
 [dependencies]
 smallvec = { version = "1", default-features = false }
-either = { version = "1", default-features = false, optional = true }
+either = { version = "1", default-features = false }
 
 paste = "1"
 

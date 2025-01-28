@@ -4,19 +4,14 @@
 #![cfg_attr(docsrs, allow(unused_attributes))]
 #![deny(missing_docs)]
 
-#[cfg(feature = "either")]
-use either::Either;
-
-#[cfg(feature = "either")]
-#[cfg_attr(docsrs, doc(cfg(feature = "either")))]
 pub use either;
+use either::Either;
 
 #[cfg(not(feature = "std"))]
 extern crate alloc as std;
 
 #[doc(hidden)]
 pub mod __private {
-  #[cfg(feature = "either")]
   pub use either;
   pub use paste;
   pub use smallvec;
@@ -98,7 +93,7 @@ macro_rules! smallvec_wrapper {
         ///
         /// This method returns `Either::Left` if the self is on the stack,
         /// or if the `Either::Right` is too long (and all the elements were spilled to the heap).
-        #[cfg(feature = "either")]
+
         #[cfg_attr(docsrs, doc(cfg(feature = "either")))]
         pub fn into_either(self) -> $crate::__private::either::Either<[$inner; { $inlined }], $crate::__private::smallvec::SmallVec<[$inner; { $inlined }]>> {
           match self.0.into_inner() {
@@ -108,7 +103,7 @@ macro_rules! smallvec_wrapper {
         }
 
         /// Convert [`Either`] into self.
-        #[cfg(feature = "either")]
+
         #[cfg_attr(docsrs, doc(cfg(feature = "either")))]
         #[inline]
         pub fn from_either(either: $crate::__private::either::Either<[$inner; { $inlined }], $crate::__private::smallvec::SmallVec<[$inner; { $inlined }]>>) -> Self {
@@ -288,7 +283,6 @@ macro_rules! smallvec_wrapper {
   };
 }
 
-#[cfg(feature = "either")]
 impl<T> From<Either<T, ::smallvec::SmallVec<[T; 1]>>> for OneOrMore<T> {
   #[inline]
   fn from(either: Either<T, ::smallvec::SmallVec<[T; 1]>>) -> Self {
@@ -299,7 +293,6 @@ impl<T> From<Either<T, ::smallvec::SmallVec<[T; 1]>>> for OneOrMore<T> {
   }
 }
 
-#[cfg(feature = "either")]
 impl<T> From<Either<Option<T>, ::smallvec::SmallVec<[T; 1]>>> for OneOrMore<T> {
   #[inline]
   fn from(either: Either<Option<T>, ::smallvec::SmallVec<[T; 1]>>) -> Self {
